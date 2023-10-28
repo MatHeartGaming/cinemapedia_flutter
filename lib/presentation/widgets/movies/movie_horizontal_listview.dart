@@ -17,10 +17,33 @@ class MovieHorizontalListView extends StatefulWidget {
       this.loadNextPage});
 
   @override
-  State<MovieHorizontalListView> createState() => _MovieHorizontalListViewState();
+  State<MovieHorizontalListView> createState() =>
+      _MovieHorizontalListViewState();
 }
 
 class _MovieHorizontalListViewState extends State<MovieHorizontalListView> {
+  final scrollController = ScrollController();
+
+  @override
+  void initState() {
+    super.initState();
+    scrollController.addListener(() {
+      if (widget.loadNextPage == null) return;
+
+      if ((scrollController.position.pixels + 200) >=
+          scrollController.position.maxScrollExtent) {
+        print("Loading more movies");
+        widget.loadNextPage!();
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    scrollController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -34,6 +57,7 @@ class _MovieHorizontalListViewState extends State<MovieHorizontalListView> {
             ),
           Expanded(
             child: ListView.builder(
+              controller: scrollController,
               physics: const BouncingScrollPhysics(),
               scrollDirection: Axis.horizontal,
               itemCount: widget.movies.length,
@@ -102,12 +126,21 @@ class _Slide extends StatelessWidget {
             width: 150,
             child: Row(
               children: [
-                Icon(Icons.star_half_outlined, color: Colors.yellow.shade800,),
-                Text("${movie.voteAverage}", style: textStyle.bodyMedium!.copyWith(
+                Icon(
+                  Icons.star_half_outlined,
                   color: Colors.yellow.shade800,
-                ),),
+                ),
+                Text(
+                  "${movie.voteAverage}",
+                  style: textStyle.bodyMedium!.copyWith(
+                    color: Colors.yellow.shade800,
+                  ),
+                ),
                 const Spacer(),
-                Text(HumanFormats.number(movie.popularity), style: textStyle.bodySmall,)
+                Text(
+                  HumanFormats.number(movie.popularity),
+                  style: textStyle.bodySmall,
+                )
               ],
             ),
           ),
