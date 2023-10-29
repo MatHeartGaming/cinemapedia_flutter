@@ -31,16 +31,22 @@ class _HomeViewState extends ConsumerState<_HomeView> {
   void initState() {
     super.initState();
     ref.read(nowPlayingMoviesProvider.notifier).loadNextPage();
+    ref.read(popularMoviesProvider.notifier).loadNextPage();
+    ref.read(upcomingMoviesProvider.notifier).loadNextPage();
+    ref.read(topRatedMoviesProvider.notifier).loadNextPage();
   }
 
   @override
   Widget build(BuildContext context) {
+    final initialLoading = ref.watch(initialLoadingProvider);
+    if (initialLoading)  return FullScreenLoader();
+    
     final nowPlayingMovies = ref.watch(nowPlayingMoviesProvider);
+    final popularMovies = ref.watch(popularMoviesProvider);
+    final upcomingMovies = ref.watch(upcomingMoviesProvider);
+    final topRatedMovies = ref.watch(topRatedMoviesProvider);
     final slideShowMovies = ref.watch(movieSlideShowProvider);
 
-    if (slideShowMovies.isEmpty) {
-      return const CircularProgressIndicator.adaptive();
-    }
 
     return CustomScrollView(
       physics: const BouncingScrollPhysics(),
@@ -67,39 +73,29 @@ class _HomeViewState extends ConsumerState<_HomeView> {
                 MovieHorizontalListView(
                   title: "Proximamente",
                   subtitle: "Este mes",
-                  movies: nowPlayingMovies,
+                  movies: upcomingMovies,
                   loadNextPage: () {
-                    ref.read(nowPlayingMoviesProvider.notifier).loadNextPage();
+                    ref.read(upcomingMoviesProvider.notifier).loadNextPage();
                   },
                 ),
                 MovieHorizontalListView(
                   title: "Populares",
-                  movies: nowPlayingMovies,
+                  movies: popularMovies,
                   loadNextPage: () {
-                    ref.read(nowPlayingMoviesProvider.notifier).loadNextPage();
+                    ref.read(popularMoviesProvider.notifier).loadNextPage();
                   },
                 ),
                 MovieHorizontalListView(
                   title: "Mejor Calificadas",
                   subtitle: "De Siempre",
-                  movies: nowPlayingMovies,
+                  movies: topRatedMovies,
                   loadNextPage: () {
-                    ref.read(nowPlayingMoviesProvider.notifier).loadNextPage();
+                    ref.read(topRatedMoviesProvider.notifier).loadNextPage();
                   },
                 ),
                 const SizedBox(
                   height: 30,
                 ),
-
-                /*Expanded(
-            child: ListView.builder(
-                itemCount: nowPlayingMovies.length,
-                itemBuilder: (context, index) {
-                  return ListTile(
-                    title: Text(nowPlayingMovies[index].title),
-                  );
-                }),
-          ),*/
               ],
             );
           }, childCount: 1),

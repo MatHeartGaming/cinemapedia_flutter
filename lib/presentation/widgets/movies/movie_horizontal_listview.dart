@@ -32,7 +32,6 @@ class _MovieHorizontalListViewState extends State<MovieHorizontalListView> {
 
       if ((scrollController.position.pixels + 200) >=
           scrollController.position.maxScrollExtent) {
-        print("Loading more movies");
         widget.loadNextPage!();
       }
     });
@@ -62,8 +61,10 @@ class _MovieHorizontalListViewState extends State<MovieHorizontalListView> {
               scrollDirection: Axis.horizontal,
               itemCount: widget.movies.length,
               itemBuilder: (context, index) {
-                return _Slide(
-                  movie: widget.movies[index],
+                return FadeInRight(
+                  child: _Slide(
+                    movie: widget.movies[index],
+                  ),
                 );
               },
             ),
