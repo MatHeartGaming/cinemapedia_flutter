@@ -42,29 +42,68 @@ class _HomeViewState extends ConsumerState<_HomeView> {
       return const CircularProgressIndicator.adaptive();
     }
 
-    return Column(
-      children: [
-        const CustomAppBar(),
-        MoviesSlideshow(movies: slideShowMovies),
-        MovieHorizontalListView(
-          title: "En cines",
-          subtitle: "El lunes 20",
-          movies: nowPlayingMovies,
-          loadNextPage: () {
-            ref.read(nowPlayingMoviesProvider.notifier).loadNextPage();
-            print("Llamando loadNextPage");
-          },
+    return CustomScrollView(
+      physics: const BouncingScrollPhysics(),
+      slivers: [
+        const SliverAppBar(
+          floating: true,
+          flexibleSpace: FlexibleSpaceBar(
+            title: CustomAppBar(),
+          ),
         ),
+        SliverList(
+          delegate: SliverChildBuilderDelegate((context, index) {
+            return Column(
+              children: [
+                MoviesSlideshow(movies: slideShowMovies),
+                MovieHorizontalListView(
+                  title: "En cines",
+                  subtitle: "El lunes 20",
+                  movies: nowPlayingMovies,
+                  loadNextPage: () {
+                    ref.read(nowPlayingMoviesProvider.notifier).loadNextPage();
+                  },
+                ),
+                MovieHorizontalListView(
+                  title: "Proximamente",
+                  subtitle: "Este mes",
+                  movies: nowPlayingMovies,
+                  loadNextPage: () {
+                    ref.read(nowPlayingMoviesProvider.notifier).loadNextPage();
+                  },
+                ),
+                MovieHorizontalListView(
+                  title: "Populares",
+                  movies: nowPlayingMovies,
+                  loadNextPage: () {
+                    ref.read(nowPlayingMoviesProvider.notifier).loadNextPage();
+                  },
+                ),
+                MovieHorizontalListView(
+                  title: "Mejor Calificadas",
+                  subtitle: "De Siempre",
+                  movies: nowPlayingMovies,
+                  loadNextPage: () {
+                    ref.read(nowPlayingMoviesProvider.notifier).loadNextPage();
+                  },
+                ),
+                const SizedBox(
+                  height: 30,
+                ),
 
-        /*Expanded(
-          child: ListView.builder(
-              itemCount: nowPlayingMovies.length,
-              itemBuilder: (context, index) {
-                return ListTile(
-                  title: Text(nowPlayingMovies[index].title),
-                );
-              }),
-        ),*/
+                /*Expanded(
+            child: ListView.builder(
+                itemCount: nowPlayingMovies.length,
+                itemBuilder: (context, index) {
+                  return ListTile(
+                    title: Text(nowPlayingMovies[index].title),
+                  );
+                }),
+          ),*/
+              ],
+            );
+          }, childCount: 1),
+        ),
       ],
     );
   }
