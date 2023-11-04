@@ -1,3 +1,4 @@
+import 'package:cinemapedia/config/constants/app_constants.dart';
 import 'package:cinemapedia/domain/models/movie.dart';
 import 'package:cinemapedia/infrastructure/models/moviedb/movie_details.dart';
 import 'package:cinemapedia/infrastructure/models/moviedb/movie_moviedb.dart';
@@ -7,7 +8,7 @@ class MovieMapper {
       adult: movieDB.adult,
       backdropPath: movieDB.backdropPath != ''
           ? 'https://image.tmdb.org/t/p/w500${movieDB.backdropPath}'
-          : 'https://sd.keepcalms.com/i/keep-calm-poster-not-found.png',
+          : posterNotFoundUrl,
       genreIds: movieDB.genreIds.map((e) => e.toString()).toList(),
       id: movieDB.id,
       originalLanguage: movieDB.originalLanguage,
@@ -16,7 +17,7 @@ class MovieMapper {
       popularity: movieDB.popularity,
       posterPath: movieDB.posterPath != ''
           ? 'https://image.tmdb.org/t/p/w500${movieDB.posterPath}'
-          : 'no-poster',
+          : posterNotFoundUrl,
       //: 'https://sd.keepcalms.com/i/keep-calm-poster-not-found.png',
       releaseDate: movieDB.releaseDate,
       title: movieDB.title,
@@ -28,7 +29,7 @@ class MovieMapper {
       adult: movie.adult,
       backdropPath: movie.backdropPath != ''
           ? 'https://image.tmdb.org/t/p/w500${movie.backdropPath}'
-          : 'https://sd.keepcalms.com/i/keep-calm-poster-not-found.png',
+          : posterNotFoundUrl,
       genreIds: movie.genres.map((e) => e.name).toList(),
       id: movie.id,
       originalLanguage: movie.originalLanguage,
@@ -37,7 +38,7 @@ class MovieMapper {
       popularity: movie.popularity,
       posterPath: movie.posterPath != ''
           ? 'https://image.tmdb.org/t/p/w500${movie.posterPath}'
-          : 'no-poster',
+          : posterNotFoundUrl,
       releaseDate: movie.releaseDate,
       title: movie.title,
       video: movie.video,
