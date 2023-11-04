@@ -26,8 +26,9 @@ class MovieScreenState extends ConsumerState<MovieScreen> {
 
   @override
   void dispose() {
+    // This launches exception...
+    //ref.read(actorsByMovieProvider).clear();
     super.dispose();
-    ref.read(actorsByMovieProvider).clear();
   }
 
   @override
