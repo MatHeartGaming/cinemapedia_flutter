@@ -2,6 +2,7 @@ import 'package:cinemapedia/presentation/screens/screens.dart';
 import 'package:go_router/go_router.dart';
 
 const String basePath = '/home/0';
+const String basePathMovie = '/home/0/movie';
 
 final appRouter = GoRouter(
   initialLocation: basePath,

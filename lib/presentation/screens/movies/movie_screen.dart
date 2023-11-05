@@ -201,6 +201,7 @@ class _CustomSliverAppBar extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final isFavoriteFuture = ref.watch(isFavoriteProvider(movie.id));
     final size = MediaQuery.of(context).size;
     return SliverAppBar(
       backgroundColor: Colors.black,
@@ -209,9 +210,13 @@ class _CustomSliverAppBar extends ConsumerWidget {
       actions: [
         IconButton(
             onPressed: () => _toggleFavorite(ref),
-            icon: const Icon(
-              Icons.favorite_border_rounded,
-              //color: Colors.red,
+            icon: isFavoriteFuture.when(
+              data: (isFav) => Icon(
+                isFav ? Icons.favorite_rounded : Icons.favorite_border_rounded,
+                color: isFav ? Colors.red : Colors.white,
+              ),
+              error: (_, __) => throw UnimplementedError(),
+              loading: () => const CircularProgressIndicator.adaptive(),
             )),
       ],
       flexibleSpace: FlexibleSpaceBar(
@@ -262,7 +267,8 @@ class _CustomSliverAppBar extends ConsumerWidget {
 
   void _toggleFavorite(WidgetRef ref) {
     print("Toggled fav: ${movie.title}");
-    ref.watch(favoriteLocalStorageProvider).toggleFavorite(movie);
+    ref.watch(favoriteLocalStorageRepositoryProvider).toggleFavorite(movie);
+    ref.invalidate(isFavoriteProvider(movie.id));
   }
 }
 

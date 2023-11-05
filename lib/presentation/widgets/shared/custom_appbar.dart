@@ -1,3 +1,4 @@
+import 'package:cinemapedia/config/router/app_router.dart';
 import 'package:cinemapedia/domain/models/movie.dart';
 import 'package:cinemapedia/presentation/delegates/search_movie_delegate.dart';
 import 'package:cinemapedia/presentation/providers/providers.dart';
@@ -43,7 +44,7 @@ class CustomAppBar extends ConsumerWidget {
                             .read(searcedhMoviesProvider.notifier)
                             .searchMoviesByQuery,
                       )).then((movie) {
-                    if (movie != null) context.push("/movie/${movie.id}");
+                    if (movie != null) context.push("$basePathMovie/${movie.id}");
                   });
                 },
                 icon: const Icon(Icons.search),
