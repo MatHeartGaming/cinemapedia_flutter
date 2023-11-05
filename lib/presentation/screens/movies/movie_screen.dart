@@ -208,7 +208,9 @@ class _CustomSliverAppBar extends StatelessWidget {
       foregroundColor: Colors.white,
       actions: [
         IconButton(
-            onPressed: () {},
+            onPressed: () {
+              // TODO: Switch state for add to favorites or remove from favs
+            },
             icon: const Icon(
               Icons.favorite_border_rounded,
               color: Colors.red,
