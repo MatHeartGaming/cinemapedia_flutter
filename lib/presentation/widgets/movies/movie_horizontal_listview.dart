@@ -136,7 +136,7 @@ class _Slide extends StatelessWidget {
                   color: Colors.yellow.shade800,
                 ),
                 Text(
-                  "${movie.voteAverage}",
+                  HumanFormats.number(movie.voteAverage, decimals: 1),
                   style: textStyle.bodyMedium!.copyWith(
                     color: Colors.yellow.shade800,
                   ),
