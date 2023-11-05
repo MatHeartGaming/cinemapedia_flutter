@@ -5,10 +5,10 @@ import 'package:path_provider/path_provider.dart';
 
 class FavoriteLocalStorageDataSourceImpl
     extends FavoritesLocalStorageDataSource {
-  late Future<Isar> db;
+  late Future<Isar> _db;
 
   FavoriteLocalStorageDataSourceImpl() {
-    db = _openDB();
+    _db = _openDB();
   }
 
   Future<Isar> _openDB() async {
@@ -20,20 +20,30 @@ class FavoriteLocalStorageDataSourceImpl
   }
 
   @override
-  Future<bool> isMovieFavorite(int movieId) {
-    // TODO: implement isMovieFavorite
-    throw UnimplementedError();
+  Future<bool> isMovieFavorite(int movieId) async {
+    final isar = await _db;
+    final Movie? isFavoriteMovie =
+        await isar.movies.filter().idEqualTo(movieId).findFirst();
+    return isFavoriteMovie != null;
   }
 
   @override
-  Future<List<Movie>> loadMovies({int limit = 10, int offset = 0}) {
-    // TODO: implement loadMovies
-    throw UnimplementedError();
+  Future<List<Movie>> loadMovies({int limit = 10, int offset = 0}) async {
+    final isar = await _db;
+    return isar.movies.where().offset(offset).limit(limit).findAll();
   }
 
   @override
-  Future<void> toggleFavorite(Movie movie) {
-    // TODO: implement toggleFavorite
-    throw UnimplementedError();
+  Future<void> toggleFavorite(Movie movie) async {
+    final isar = await _db;
+    bool favoriteMovie = await isMovieFavorite(movie.id);
+    if (favoriteMovie) {
+      //Borrar
+      isar.writeTxnSync(() => isar.movies.deleteSync(movie.isarId!));
+      return;
+    }
+
+    // Insertar
+    isar.writeTxnSync(() => isar.movies.putSync(movie));
   }
 }

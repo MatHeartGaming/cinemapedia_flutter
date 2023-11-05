@@ -194,13 +194,13 @@ class _ActorsByMovie extends ConsumerWidget {
   }
 }
 
-class _CustomSliverAppBar extends StatelessWidget {
+class _CustomSliverAppBar extends ConsumerWidget {
   final Movie movie;
 
   const _CustomSliverAppBar({required this.movie});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final size = MediaQuery.of(context).size;
     return SliverAppBar(
       backgroundColor: Colors.black,
@@ -208,12 +208,10 @@ class _CustomSliverAppBar extends StatelessWidget {
       foregroundColor: Colors.white,
       actions: [
         IconButton(
-            onPressed: () {
-              // TODO: Switch state for add to favorites or remove from favs
-            },
+            onPressed: () => _toggleFavorite(ref),
             icon: const Icon(
               Icons.favorite_border_rounded,
-              color: Colors.red,
+              //color: Colors.red,
             )),
       ],
       flexibleSpace: FlexibleSpaceBar(
@@ -223,37 +221,48 @@ class _CustomSliverAppBar extends StatelessWidget {
           style: const TextStyle(fontSize: 20),
           textAlign: TextAlign.start,
         ),
-        background: Stack(
-          children: [
-            SizedBox.expand(
-              child: Image.network(
-                movie.posterPath,
-                fit: BoxFit.fill,
-                loadingBuilder: (context, child, loadingProgress) {
-                  if (loadingProgress != null) return const SizedBox();
-                  return FadeIn(child: child);
-                },
+        background: GestureDetector(
+          onDoubleTap: () => _toggleFavorite(ref),
+          child: Stack(
+            children: [
+              SizedBox.expand(
+                child: Image.network(
+                  movie.posterPath,
+                  fit: BoxFit.fill,
+                  loadingBuilder: (context, child, loadingProgress) {
+                    if (loadingProgress != null) return const SizedBox();
+                    return FadeIn(child: child);
+                  },
+                ),
               ),
-            ),
 
-            const _CustomGradient(
-                begin: Alignment.topRight,
-                end: Alignment.bottomLeft,
-                stops: [ 0.0, 0.25 ],
-                colors: [
-                  Colors.black54,
-                  Colors.transparent,
-                ]),
+              const _CustomGradient(
+                  begin: Alignment.topRight,
+                  end: Alignment.bottomLeft,
+                  stops: [
+                    0.0,
+                    0.25
+                  ],
+                  colors: [
+                    Colors.black54,
+                    Colors.transparent,
+                  ]),
 
-            // Gradiente
-            const _CustomGradient(
-              begin: Alignment.topLeft,
-              stops: [0.0, 0.35],
-            ),
-          ],
+              // Gradiente
+              const _CustomGradient(
+                begin: Alignment.topLeft,
+                stops: [0.0, 0.35],
+              ),
+            ],
+          ),
         ),
       ),
     );
+  }
+
+  void _toggleFavorite(WidgetRef ref) {
+    print("Toggled fav: ${movie.title}");
+    ref.watch(favoriteLocalStorageProvider).toggleFavorite(movie);
   }
 }
 
