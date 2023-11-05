@@ -206,6 +206,14 @@ class _CustomSliverAppBar extends StatelessWidget {
       backgroundColor: Colors.black,
       expandedHeight: size.height * 0.7,
       foregroundColor: Colors.white,
+      actions: [
+        IconButton(
+            onPressed: () {},
+            icon: const Icon(
+              Icons.favorite_border_rounded,
+              color: Colors.red,
+            )),
+      ],
       flexibleSpace: FlexibleSpaceBar(
         titlePadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
         title: Text(
@@ -220,26 +228,57 @@ class _CustomSliverAppBar extends StatelessWidget {
                 movie.posterPath,
                 fit: BoxFit.fill,
                 loadingBuilder: (context, child, loadingProgress) {
-                    if (loadingProgress != null) return const SizedBox();
-                    return FadeIn(child: child);
-                  },
+                  if (loadingProgress != null) return const SizedBox();
+                  return FadeIn(child: child);
+                },
               ),
             ),
-            const SizedBox.expand(
-                child: DecoratedBox(
-              decoration: BoxDecoration(
-                gradient: LinearGradient(begin: Alignment.topLeft, stops: [
-                  0.0,
-                  0.35
-                ], colors: [
-                  Colors.black87,
+
+            const _CustomGradient(
+                begin: Alignment.topRight,
+                end: Alignment.bottomLeft,
+                stops: [ 0.0, 0.25 ],
+                colors: [
+                  Colors.black54,
                   Colors.transparent,
                 ]),
-              ),
-            )),
+
+            // Gradiente
+            const _CustomGradient(
+              begin: Alignment.topLeft,
+              stops: [0.0, 0.35],
+            ),
           ],
         ),
       ),
     );
+  }
+}
+
+class _CustomGradient extends StatelessWidget {
+  final Alignment begin;
+  final Alignment end;
+  final List<double> stops;
+  final List<Color> colors;
+
+  const _CustomGradient({
+    required this.begin,
+    this.end = Alignment.centerRight,
+    this.stops = const [0.0, 0.25],
+    this.colors = const [
+      Colors.black87,
+      Colors.transparent,
+    ],
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox.expand(
+        child: DecoratedBox(
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+            begin: begin, end: end, stops: stops, colors: colors),
+      ),
+    ));
   }
 }
