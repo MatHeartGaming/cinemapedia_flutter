@@ -209,7 +209,7 @@ class _CustomSliverAppBar extends ConsumerWidget {
       foregroundColor: Colors.white,
       actions: [
         IconButton(
-            onPressed: () => _toggleFavorite(ref),
+            onPressed: () async => await _toggleFavorite(ref),
             icon: isFavoriteFuture.when(
               data: (isFav) => Icon(
                 isFav ? Icons.favorite_rounded : Icons.favorite_border_rounded,
@@ -227,7 +227,7 @@ class _CustomSliverAppBar extends ConsumerWidget {
           textAlign: TextAlign.start,
         ),
         background: GestureDetector(
-          onDoubleTap: () => _toggleFavorite(ref),
+          onDoubleTap: () async => await _toggleFavorite(ref),
           child: Stack(
             children: [
               SizedBox.expand(
@@ -265,9 +265,9 @@ class _CustomSliverAppBar extends ConsumerWidget {
     );
   }
 
-  void _toggleFavorite(WidgetRef ref) {
-    print("Toggled fav: ${movie.title}");
-    ref.watch(favoriteLocalStorageRepositoryProvider).toggleFavorite(movie);
+  Future<void> _toggleFavorite(WidgetRef ref) async {
+    //ref.read(favoriteLocalStorageRepositoryProvider).toggleFavorite(movie);
+    await ref.read(favoriteMoviesProvider.notifier).toggleFavorite(movie);
     ref.invalidate(isFavoriteProvider(movie.id));
   }
 }

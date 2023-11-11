@@ -16,7 +16,7 @@ class FavoriteLocalStorageDataSourceImpl
     if (Isar.instanceNames.isEmpty) {
       return await Isar.open([MovieSchema], directory: appDirectory.path);
     }
-    return Future.value(Isar.getInstance());
+    return await Future.value(Isar.getInstance());
   }
 
   @override
@@ -34,16 +34,17 @@ class FavoriteLocalStorageDataSourceImpl
   }
 
   @override
-  Future<void> toggleFavorite(Movie movie) async {
+  Future<bool> toggleFavorite(Movie movie) async {
     final isar = await _db;
     bool favoriteMovie = await isMovieFavorite(movie.id);
     if (favoriteMovie) {
       //Borrar
-      isar.writeTxnSync(() => isar.movies.deleteSync(movie.isarId!));
-      return;
+      isar.writeTxnSync(() => isar.movies.deleteSync(movie.isarId));
+      return false;
     }
 
     // Insertar
     isar.writeTxnSync(() => isar.movies.putSync(movie));
+    return true;
   }
 }

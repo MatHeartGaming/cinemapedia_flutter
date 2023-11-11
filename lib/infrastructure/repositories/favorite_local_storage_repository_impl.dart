@@ -9,17 +9,17 @@ class FavoriteLocalStorageRepositoryImpl
   FavoriteLocalStorageRepositoryImpl(this.dataSource);
 
   @override
-  Future<bool> isMovieFavorite(int movieId) {
-    return dataSource.isMovieFavorite(movieId);
+  Future<bool> isMovieFavorite(int movieId) async {
+    return await dataSource.isMovieFavorite(movieId);
   }
 
   @override
-  Future<List<Movie>> loadMovies({int limit = 10, int offset = 0}) {
-    return dataSource.loadMovies(limit: limit, offset: offset);
+  Future<List<Movie>> loadMovies({int limit = 10, int offset = 0}) async {
+    return await dataSource.loadMovies(limit: limit, offset: offset);
   }
 
   @override
-  Future<void> toggleFavorite(Movie movie) {
-    return dataSource.toggleFavorite(movie);
+  Future<bool> toggleFavorite(Movie movie) async {
+    return await dataSource.toggleFavorite(movie);
   }
 }

@@ -1,3 +1,4 @@
+import 'package:animate_do/animate_do.dart';
 import 'package:cinemapedia/domain/models/movie.dart';
 import 'package:cinemapedia/presentation/widgets/widgets.dart';
 import 'package:flutter/material.dart';
@@ -13,13 +14,24 @@ class MovieMasonry extends StatefulWidget {
 }
 
 class _MovieMasonryState extends State<MovieMasonry> {
+  final scrollController = ScrollController();
+
   @override
   void initState() {
+    scrollController.addListener(() {
+      if (widget.loadNextPage == null) return;
+      if ((scrollController.position.pixels + 100) >=
+          scrollController.position.maxScrollExtent) {
+        widget.loadNextPage!();
+        print("Loading next page favorites");
+      }
+    });
     super.initState();
   }
 
   @override
   void dispose() {
+    scrollController.dispose();
     super.dispose();
   }
 
@@ -28,6 +40,7 @@ class _MovieMasonryState extends State<MovieMasonry> {
     return Padding(
       padding: const EdgeInsets.only(top: 20, left: 8, right: 8),
       child: MasonryGridView.count(
+        controller: scrollController,
         crossAxisCount: 3,
         itemCount: widget.movies.length,
         mainAxisSpacing: 10,
@@ -37,12 +50,14 @@ class _MovieMasonryState extends State<MovieMasonry> {
           if (index == 1) {
             return Column(
               children: [
-                const SizedBox(height: 30,),
-                MoviePosterLink(movie: movie),
+                const SizedBox(
+                  height: 30,
+                ),
+                SlideInUp(child: MoviePosterLink(movie: movie)),
               ],
             );
           }
-          return MoviePosterLink(movie: movie);
+          return SlideInUp(child: MoviePosterLink(movie: movie));
         },
       ),
     );
